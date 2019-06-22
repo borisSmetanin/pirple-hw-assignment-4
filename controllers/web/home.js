@@ -6,7 +6,16 @@ module.exports = home;
 
 home.index = (payload, callback) => {
 
-    helpers.load_web_page('home', [], {title: 'Home Title'}, (err, html_page) => {
+    const 
+        menu_items = require('../../assets/menu_items'),
+        home_page_data = {
+            menu_items: Object.values(menu_items),
+            title: 'Home Title',
+            show_pizza_slide: true,
+            user_is_logged: payload.user_is_logged
+        };
+
+    helpers.load_web_page('home', [], home_page_data, (err, html_page) => {
 
         if ( ! err && html_page) {
             // (http_code, error, payload, response_type

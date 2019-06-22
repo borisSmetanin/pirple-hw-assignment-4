@@ -20,3 +20,8 @@
   .portfolio-item {
     margin-bottom: 30px;
   }
+
+  .pizza-card-cover {
+    object-fit: cover;
+    height: 23vh;
+  }

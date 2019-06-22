@@ -1,9 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    [css]
-    <title>{title}</title>
-</head>
-<body>
+  <!-- Navigation -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{{{base_url}}}">Pizza Delivery</a>
+      <a class="navbar-brand" href="{{{base_url}}}orders/cart">
+        <i class="fa fa-shopping-cart"></i> (<span class="pizza-shopping-cart">0</span>)
+      </a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          {{^is_logged_in}}
+            <li class="nav-item">
+              <a class="nav-link management-dialog" href="#" data-type="register">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link login-dialog" href="#">Login</a>
+            </li>
+          {{/is_logged_in}}
+          {{#is_logged_in}}
+            <li class="nav-item">
+              <a class="nav-link logout" href="{{{base_url}}}orders/view" data-type="login">Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link management-dialog" href="#" data-type="user_settings">Setting</a>
+              </li>
+            <li class="nav-item">
+              <a class="nav-link logout" href="#">Logout</a>
+            </li>
+          {{/is_logged_in}}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+{{#show_pizza_slide}}
+  <header>
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+      </ol>
+      
+      <div class="carousel-inner" role="listbox">
+        <!-- Slide One - Set the background image for this slide in the line below -->
+        <div class="carousel-item active" style="background-image: url('{{{img_url}}}pizza-1.jpg')">
+          <div class="carousel-caption d-none d-md-block text-dark text-bold">
+          </div>
+        </div>
+        <!-- Slide Two - Set the background image for this slide in the line below -->
+        <div class="carousel-item" style="background-image: url('{{{img_url}}}pizza-2.jpg')">
+          <div class="carousel-caption d-none d-md-block">
+          </div>
+        </div>
+        <!-- Slide Three - Set the background image for this slide in the line below -->
+        <div class="carousel-item" style="background-image: url('{{{img_url}}}pizza-3.jpg')">
+          <div class="carousel-caption d-none d-md-block">
+          </div>
+        </div>
+      </div>
+
+      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </header>
+{{/show_pizza_slide}}

@@ -1,4 +1,21 @@
-<h1>Home page</h1>
-<div>
-
+<h2>Our Menu</h2>
+<div class="row">
+    {{#menu_items}}
+        <div class="col-lg-4 col-sm-6 portfolio-item">
+            <div class="card h-100">
+               <img class="card-img-top pizza-card-cover" src="{{{img_url}}}{{name}}.jpg" alt="">
+                <div class="card-body">
+                    <h4 class="card-title">{{title}} <span class="badge badge-info">{{price}}$</span></h4>
+                    <p class="card-text">{{description}}</p>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-success btn-lg btn-block" data-name="{{name}}">
+                        <i class="fa fa-plus-circle"></i>
+                        Add To Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    {{/menu_items}}
 </div>
+<!-- /.row -->
