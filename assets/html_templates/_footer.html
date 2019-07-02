@@ -7,5 +7,17 @@
   </footer>
 
   <!-- Bootstrap core JavaScript -->
-  <script src="http://localhost:3000/assets/node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="http://localhost:3000/assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{{base_url}}}assets/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="{{{base_url}}}assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{{base_url}}}assets/node_modules/mustache/mustache.js"></script>
+  <script>
+  const BASE_URL = '{{{base_url}}}';
+  </script>
+  {{#scripts}}
+    <script src="{{{js_url}}}{{.}}"></script>
+  {{/scripts}}
+  {{#partials}} 
+    <script id="{{partial_id}}" type="x-tmpl-mustache">
+        {{{partial_body}}}
+    </script>
+  {{/partials}}

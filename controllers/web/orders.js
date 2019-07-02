@@ -6,7 +6,12 @@ const helpers = require('../../lib/helpers');
 
 orders.view = (payload, callback) => {
 
-    helpers.load_web_page('order_view', [], { title: 'Your Orders' }, (err, html_page) => {
+    let page_data = { 
+        title: 'Your Orders',
+        user_is_logged: payload.user_is_logged 
+    };
+
+    helpers.load_web_page('order_view', [], page_data, (err, html_page) => {
 
         if ( ! err && html_page) {
             // (http_code, error, payload, response_type
@@ -19,7 +24,11 @@ orders.view = (payload, callback) => {
 
 orders.cart = (payload, callback) => {
 
-    helpers.load_web_page('order_cart', [], { title: 'Current Order' }, (err, html_page) => {
+    let page_data = { 
+        title: 'Current Order',
+        user_is_logged: payload.user_is_logged 
+    };
+    helpers.load_web_page('order_cart', [], page_data, (err, html_page) => {
 
         if ( ! err && html_page) {
             // (http_code, error, payload, response_type

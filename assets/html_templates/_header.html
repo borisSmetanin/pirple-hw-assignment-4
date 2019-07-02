@@ -10,15 +10,15 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          {{^is_logged_in}}
+          {{^user_is_logged}}
             <li class="nav-item">
               <a class="nav-link management-dialog" href="#" data-type="register">Register</a>
             </li>
             <li class="nav-item">
               <a class="nav-link login-dialog" href="#">Login</a>
             </li>
-          {{/is_logged_in}}
-          {{#is_logged_in}}
+          {{/user_is_logged}}
+          {{#user_is_logged}}
             <li class="nav-item">
               <a class="nav-link logout" href="{{{base_url}}}orders/view" data-type="login">Orders</a>
             </li>
@@ -28,7 +28,7 @@
             <li class="nav-item">
               <a class="nav-link logout" href="#">Logout</a>
             </li>
-          {{/is_logged_in}}
+          {{/user_is_logged}}
         </ul>
       </div>
     </div>

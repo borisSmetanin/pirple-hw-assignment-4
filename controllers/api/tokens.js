@@ -69,11 +69,17 @@ tokens.create_toke_id = (token_expired, user_id, user_password) => {
                     file_model.create('tokens', token_id, token_insert_payload, (err) => {
 
                         if ( ! err) {
-
-                            callback(200, false, {
-                                message: 'Token was created successfully',
-                                data: { token: token_id }
-                            });
+                            let 
+                                cookies = [
+                                    { token: token_id, 'max-age': 31536000, path: '/'},
+                                    { email: token_request_payload.email, 'max-age': 31536000, path: '/' } 
+                                ],
+                                response_payload = {
+                                    message: 'Token was created successfully',
+                                    data: { token: token_id }
+                                };
+                                
+                            callback(200, false, response_payload, 'json', cookies);
                         } else {
                             callback(500, true, {
                                 message: 'Tokens - could not create a token, please try again later'
