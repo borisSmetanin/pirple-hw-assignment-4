@@ -54,20 +54,26 @@ App.serialize_form = (form_elem) => {
 
 App.send_ajax_request = (end_point, http_type, request_body) => {
 
-    return fetch(
-            `${BASE_URL}${end_point}`,
-            {
-                method: http_type,
-                cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                redirect: 'follow', // manual, *follow, error
-                referrer: 'no-referrer', // no-referrer, *client
-                body: JSON.stringify(request_body),
-            }
-        )
+    const request_payload = {
+        method: http_type,
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        redirect: 'follow', // manual, *follow, error
+        referrer: 'no-referrer', // no-referrer, *client
+    };
+    
+    if (http_type !== 'GET') {
+        request_payload.body = JSON.stringify(
+            typeof request_body === 'object' && Object.entries(request_body).length > 0
+                ? request_body
+                : {}
+        );
+    }
+
+    return fetch(`${BASE_URL}${end_point}`,request_payload)
         .then(response => response.json())
         .then(server_json_response => {
             if (server_json_response && server_json_response.error) {
@@ -120,16 +126,99 @@ App.register_dialog = () => {
    );
 }
 
-// Define which function are going to be executed
-App.execute = () => {
-    const management_dialog = document.getElementsByClassName('management-dialog')
 
-    management_dialog[0].addEventListener('click', (e) => {
+App.login_dialog = () => {
+
+    App.dialog(
+        'dialog_partial', {
+            title: 'Login',
+            buttons: [
+                {
+                    class: 'btn-success',
+                    name: 'submit',
+                    title: 'Submit',
+                    callback:  async (model_content, event) => {
+                        let 
+                            form            = model_content.getElementsByTagName('form')[0],
+                            serialized_form = App.serialize_form(form);
+
+                        try {
+                                await App.send_ajax_request('api/tokens', 'POST', serialized_form);
+                                location.reload();
+                        } catch (error) {
+
+                            alert(error.message);
+                        }
+                    }
+                }
+            ]
+        },  
+        document.getElementById('login_partial').innerHTML
+    );
+}
+
+App.logout = async () => {
+
+    // No matter what, after logout request, even if it fails - need to go back to the home page
+    await App.send_ajax_request('user_auth/logout', 'GET');
+
+    location.href = BASE_URL;
+}
+
+App.user_logged_in = () => {
+    const logout = document.getElementsByClassName('logout');
+
+    logout[0].addEventListener('click', (e) => {
         e.preventDefault();
-        App.register_dialog();
+        App.logout();
     });
 }
 
+App.user_logged_out = () => {
+
+    //-- Define Variables -------------------------------------------------------------//
+    const 
+        registration_dialog = document.getElementsByClassName('management-dialog'),
+        login_dialog        = document.getElementsByClassName('login-dialog');
+
+    //-- Events -----------------------------------------------------------------------//
+
+    registration_dialog[0].addEventListener('click', (e) => {
+        e.preventDefault();
+        App.register_dialog();
+    });
+
+    login_dialog[0].addEventListener('click', (e) => {
+        e.preventDefault();
+        App.login_dialog();
+    });   
+}
+
+App.update_shopping_cart_items_count = () => {
+
+    const current_order_json = localStorage.getItem('current_order');
+
+    if (current_order_json) {
+        const 
+            pizza_shopping_cart = document.getElementsByClassName('pizza-shopping-cart');
+            current_order       = JSON.parse(current_order_json),
+            { total_items }     = current_order;
+
+        pizza_shopping_cart[0].innerHTML =  total_items;
+    }
+}
+
+// Define all events listener and all functions that are going to be executed on page load 
+App.execute = () => {
+    
+    App.update_shopping_cart_items_count();
+    // Different logic according to different state
+    if (USER_IS_LOGGED) {
+        App.user_logged_in();
+    } else {
+        App.user_logged_out();
+    }
+}
 // Execute
 App.execute();
 

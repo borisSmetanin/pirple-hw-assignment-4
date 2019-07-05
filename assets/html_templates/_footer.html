@@ -11,7 +11,10 @@
   <script src="{{{base_url}}}assets/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{{base_url}}}assets/node_modules/mustache/mustache.js"></script>
   <script>
-  const BASE_URL = '{{{base_url}}}';
+    const 
+      BASE_URL        = '{{{base_url}}}',
+      USER_IS_LOGGED  = {{#user_is_logged}}true{{/user_is_logged}}{{^user_is_logged}}false{{/user_is_logged}},
+      CONTROLLER_NAME = {{#controller_name}}'{{controller_name}}'{{/controller_name}}{{^controller_name}}null{{/controller_name}};
   </script>
   {{#scripts}}
     <script src="{{{js_url}}}{{.}}"></script>
@@ -21,3 +24,10 @@
         {{{partial_body}}}
     </script>
   {{/partials}}
+  <script>
+    // Execute the controller last (after all scripts are loaded)
+    if (CONTROLLER_NAME && App[CONTROLLER_NAME] && typeof App[CONTROLLER_NAME] === 'function') {
+          // Execute Controller
+          App[CONTROLLER_NAME]();
+    }
+  </script>

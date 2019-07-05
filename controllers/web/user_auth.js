@@ -4,24 +4,32 @@ const user_auth = {};
 
 module.exports = user_auth;
 
-user_auth.register = () => {
-    // Create a user
-    // create a token
-    // set token cookie
-}
+const tokens = require('../api/tokens');
 
-user_auth.login = () => {
+/**
+ * GET user_auth/logout
+ * 
+ * Acts as a buffer for the real logout function (tokens delete)
+ * This is needed in order to avoid exposing token and user email in the app
+ * 
+ * Token and email are been transferred in here via secure cookies (http only) so front-end scripts can not accesses their data
+ * 
+ */
+user_auth.logout = (payload, callback) => {
 
-    // check user exist
-    // create a token
-    // set token cookie
+    if (payload.request_cookies && payload.request_cookies.token && payload.request_cookies.email) {
 
-}
-
-user_auth.logout = () => {
-
-    // get the token from cookie
-    // delete the token
-    // set token to be deleted
-
+        const token_payload = {
+            id: payload.request_cookies.token,
+            payload: {
+                user_email: payload.request_cookies.email
+            }
+        };
+        tokens.delete(token_payload, callback);
+    } else {
+    
+        callback(412, true, {
+            message: 'Can not logout when you are not logged in..'
+        }); 
+    }
 }

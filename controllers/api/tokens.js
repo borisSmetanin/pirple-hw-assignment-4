@@ -160,7 +160,6 @@ tokens.create_toke_id = (token_expired, user_id, user_password) => {
         
         // Get the token
         file_model.read('tokens', token_id, (err, token_data) => {
-    
             if ( ! err && token_data) {
     
                 // Check if provided user's email is the same as in the token's data
