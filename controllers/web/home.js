@@ -1,8 +1,7 @@
 const home = {};
+module.exports = home;
 
 const helpers = require('../../lib/helpers');
-
-module.exports = home;
 
 home.index = (payload, callback) => {
 

@@ -22,13 +22,26 @@ orders.view = (payload, callback) => {
     });
 }
 
+/**
+ * GET orders/cart
+ * 
+ * Page for managing the order
+ */
 orders.cart = (payload, callback) => {
+
+    const menu_items = require('../../assets/menu_items');
 
     let page_data = { 
         title: 'Current Order',
-        user_is_logged: payload.user_is_logged 
-    };
-    helpers.load_web_page('order_cart', [], page_data, (err, html_page) => {
+        user_is_logged: payload.user_is_logged,
+        menu_items_json: helpers.pares_object_to_json(menu_items),
+        controller_name: 'cart'
+    },
+    home_page_assets = {
+        scripts:  [ 'cart.js' ],
+        partials: [ 'cart' ]
+    };;
+    helpers.load_web_page('order_cart', home_page_assets, page_data, (err, html_page) => {
 
         if ( ! err && html_page) {
             // (http_code, error, payload, response_type
