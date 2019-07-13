@@ -1,9 +1,17 @@
 {{#cart_items}}
-    <tr>
+    <tr class="{{name}}-container">
         <th>{{title}}</th>
-        <td>{{amount}}</td>
+        <td>
+            <button type="button" class="btn btn-outline-warning update-existing-cart-item" data-name="{{name}}" data-update_type="subtract">
+                <i class="fa fa-times-circle"></i>
+            </button>
+            <span class="item-amount">{{amount}}</span>
+            <button type="button" class="btn btn-outline-success update-existing-cart-item" data-name="{{name}}" data-update_type="add">
+                <i class="fa fa-plus-circle"></i>
+            </button>
+        </td>
         <td>{{price}}</td>
-        <td>{{sum}}</td>
+        <td><span class="item-sum">{{sum}}</span></td>
         <td> Action btns...</td>
     </tr>
 {{/cart_items}}

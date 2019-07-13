@@ -1,1 +1,56 @@
-<!-- Orders page  -->
+{{#user_is_logged}}
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Order Summery</th>
+        <th scope="col">Total Sum</th>
+        <th scope="col">Payment Received</th>
+        <th scope="col">Email Sent</th>
+        <th scope="col">Order Complete</th>
+      </tr>
+    </thead>
+
+    <tbody>
+        {{#order_data}}
+            <tr>
+                <td>{{display_date}}</td>
+                <td>
+                    <ul class="list-group list-group-flush">
+                        {{#order}}
+                            <li class="list-group-item">
+                                {{title}}: <span class="badge badge-info">{{amount}}</span>
+                            </li>
+                        {{/order}}
+                    </ul>
+                </td>
+                <td>{{payment_sum}}</td>
+                <td>
+                    {{#payment_complete}}
+                        <i class="fa fa-check-circle fa-lg text-success"></i>
+                    {{/payment_complete}}
+                    {{^payment_complete}}
+                        <i class="fa fa-times-circle fa-lg text-danger"></i>
+                    {{/payment_complete}}
+                </td>
+                <td>
+                    {{#email_sent}}
+                        <i class="fa fa-check-circle fa-lg text-success"></i>
+                    {{/email_sent}}
+                    {{^email_sent}}
+                        <i class="fa fa-times-circle fa-lg text-danger"></i>
+                    {{/email_sent}}
+                </td>
+                <td>
+                    {{#order_complete}}
+                        <i class="fa fa-check-circle fa-lg text-success"></i>
+                    {{/order_complete}}
+                    {{^order_complete}}
+                        <i class="fa fa-times-circle fa-lg text-danger"></i>
+                    {{/order_complete}}
+                </td>
+            </tr>
+       {{/order_data}}
+    </tbody>
+  </table>
+  {{/user_is_logged}}
