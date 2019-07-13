@@ -23,6 +23,14 @@
   */
  orders.post_collection = (request, callback) => {
 
+    // Support cookies in the request
+    if ( ! request.payload.email &&  request.request_cookies &&  request.request_cookies.email) {
+        request.payload.email = request.request_cookies.email;
+    }
+
+    if ( ! request.token &&  request.request_cookies &&  request.request_cookies.token) {
+        request.token = request.request_cookies.token;
+    }
 
     if (request.payload.email) {
 
@@ -170,6 +178,16 @@
   * GET /orders
   */
  orders.get_collection = (request, callback) => {
+
+    // Support adding cookies data to the request
+    if ( ! request.token && request.request_cookies && request.request_cookies.token) {
+        request.token = request.request_cookies.token;
+    }
+
+    if ( ! request.query_object && request.request_cookies && request.request_cookies.email) {
+
+        request.query_object = { email: request.request_cookies.email }
+    }
 
     helpers.verify_token(request.token, request.query_object.email, (err, token_data) => {
         if ( ! err) {

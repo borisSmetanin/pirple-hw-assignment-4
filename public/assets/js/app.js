@@ -25,7 +25,7 @@ App.dialog = (partial_id, dialog_data, dialog_body) => {
         // Extract the content element
         let model_content_elm = $jq_dialog[0].getElementsByClassName('modal-content')[0];
     
-        // Loop on eqach given btn and apply a callback when it clicks
+        // Loop on each given btn and apply a callback when it clicks
         if (dialog_data && dialog_data.buttons) {
             dialog_data.buttons.forEach( button => {
                 let dialog_button = document.getElementsByClassName(`dialog-callback-${button.name}`)[0];
@@ -41,6 +41,27 @@ App.dialog = (partial_id, dialog_data, dialog_body) => {
         $jq_dialog.modal('dispose');
         $jq_dialog.remove();
     });
+}
+
+App.show_toast = (toast_data, callback) => {
+
+    let toast_html = Mustache.render(
+        document.getElementById('toast_partial').innerHTML, 
+        toast_data
+    );
+
+    let $toast_html = $(toast_html);
+    $('body').find('#toast-messages-container').append($toast_html);
+
+    $toast_html.toast('show');
+
+    $toast_html.on('hidden.bs.toast', () => {
+        $toast_html.remove();
+
+        if (callback && typeof callback == 'function') {
+            callback();
+        }
+    })
 }
 
 App.serialize_form = (form_elem) => {

@@ -5,13 +5,14 @@ App.home = () => {
     pizza_items_container.addEventListener('click', (e) => {
     
         // Extract the target out of the event
-        const { target } = e;
+        const { target }  = e;
+        const clicked_elm = target.closest('.add-to-cart');
     
         // Add to cart is clicked
-        if (target.classList.contains('add-to-cart')) {
+        if (clicked_elm && pizza_items_container.contains(clicked_elm)) {
     
             const 
-                { name }           = target.dataset,
+                { name }           = clicked_elm.dataset,
                 current_order_json = localStorage.getItem('current_order'),
                 current_order      = current_order_json ? JSON.parse(current_order_json) : { total_items: 0 }; 
     
