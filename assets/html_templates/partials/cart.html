@@ -3,7 +3,7 @@
         <th>{{title}}</th>
         <td>
             <button type="button" class="btn btn-outline-warning update-existing-cart-item" data-name="{{name}}" data-update_type="subtract">
-                <i class="fa fa-times-circle"></i>
+                <i class="fa fa-minus-circle"></i>
             </button>
             <span class="item-amount">{{amount}}</span>
             <button type="button" class="btn btn-outline-success update-existing-cart-item" data-name="{{name}}" data-update_type="add">
@@ -12,7 +12,12 @@
         </td>
         <td>{{price}}</td>
         <td><span class="item-sum">{{sum}}</span></td>
-        <td> Action btns...</td>
+        <td>
+            <button type="button" class="btn btn-danger delete-existing-cart-item" data-name="{{name}}" data-update_type="add">
+                Remove
+                <i class="fa fa-trash"></i>
+            </button> 
+        </td>
     </tr>
 {{/cart_items}}
  

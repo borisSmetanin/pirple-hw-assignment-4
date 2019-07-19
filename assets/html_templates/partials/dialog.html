@@ -13,7 +13,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 {{#buttons}}
-                    <button type="button" class="btn {{class}} dialog-callback-{{name}}">{{title}}</button>
+                    <button type="button" {{#close_on_click}}data-dismiss="modal"{{/close_on_click}} class="btn {{class}} dialog-callback-{{name}}">{{title}}</button>
                 {{/buttons}}
             </div>
             </div>
