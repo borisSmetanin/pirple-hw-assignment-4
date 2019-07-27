@@ -11,7 +11,7 @@ const
 
 orders.view = (payload, callback) => {
 
-    if (payload.request_cookies && payload.request_cookies.email && payload.request_cookies.token) {
+    if (payload.user_is_logged) {
 
         api_orders.get_collection(payload, async (http_code, err, data ) => {
             

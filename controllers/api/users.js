@@ -226,6 +226,11 @@ users.post_collection = (request, callback) => {
  */
 users.put = (request, callback) => {
 
+    // Support cookies in the request
+    if ( ! request.token &&  request.request_cookies &&  request.request_cookies.token) {
+        request.token = request.request_cookies.token;
+    }
+
     let user_email = request.id;
     helpers.verify_token(request.token, user_email, (err, token_data) => {
 
@@ -264,7 +269,7 @@ users.put = (request, callback) => {
                                     // Remove the user's password before passing the data back to the user
                                     ({password, ...updated_user} = updated_user);
                                     if ( ! err) {
-                                        callback(200, true, {
+                                        callback(200, false, {
                                             message: `user was successfully updated`,
                                             data: {
                                                 updated_user: updated_user
@@ -312,6 +317,11 @@ users.put = (request, callback) => {
  * DELETE /users/<user_email>
  */
 users.delete = (request, callback) => {
+    
+    if ( ! request.token &&  request.request_cookies &&  request.request_cookies.token) {
+        request.token = request.request_cookies.token;
+    }
+    
     let user_email = request.id;
     if ( user_email) {
         helpers.verify_token(request.token, user_email, (err, token_data) => {
@@ -324,6 +334,21 @@ users.delete = (request, callback) => {
 
                         callback(200, false,  {
                             message: `User was successfully deleted from the system`
+                        });
+
+                        // Delete all order related files
+                        // Bad practice but once we will move to work with real DB, this will be redundant
+                        file_model.read_collection('orders', token_data.user_id, (err, orders) => {
+                            orders.forEach(order => {
+                                file_model.delete('orders', order, (err, data) => {
+                                    if ( ! err) {
+
+                                        console.log('Order was successfully deleted');
+                                    } else {
+                                        console.log('order delete err', err);
+                                    }
+                                })
+                            });
                         });
                     } else {
 

@@ -1,0 +1,58 @@
+<h2>Manage your settings</h2>
+<form id="main-settings-form">
+    <div class="form-group row">
+        <label for="user-settings-name" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="user-settings-name" name="name" placeholder="Name" value="{{user.name}}">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="user-settings-city" class="col-sm-2 col-form-label">City</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="user-settings-city" name="city" placeholder="City" value="{{user.city}}">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="user-settings-street-name" class="col-sm-2 col-form-label">Street Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="user-settings-street-name" name="street_name" placeholder="Street Name" value="{{user.street_name}}">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="user-settings-street-number" class="col-sm-2 col-form-label">Street Number</label>
+        <div class="col-sm-10">
+            <input type="number" class="form-control" id="user-settings-street-number" min="1" name="street_number" placeholder="Street Number" value="{{user.street_number}}">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12 text-center">
+            <button type="submit" class="btn btn-outline-success btn-lg">Update</button>
+        </div>
+    </div>
+</form>
+<h1></h1>
+<hr />
+<div id="collapsible-settings">
+    <div class="card">
+        <div class="card-header" data-toggle="collapse" data-target="#delete-user-form" aria-expanded="false" aria-controls="delete-user-form">
+            <h5 class="mb-0">Advanced</h5>
+        </div>
+
+        <div id="delete-user-form" class="collapse" data-parent="#collapsible-settings">
+            <div class="card-body">
+                <form>
+                    <div class="form-group row">
+                        <label for="user-settings-name" class="col-sm-2 col-form-label">Delete Your account</label>
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-danger">Delete Account</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<script>
+const USER_EMAIL = '{{user.email}}';
+</script>

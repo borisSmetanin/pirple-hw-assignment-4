@@ -137,7 +137,12 @@ App.register_dialog = () => {
 
                         } catch (error) {
 
-                            alert(error.message);
+                            App.show_toast({
+                                title: 'Problem in registration:',
+                                type: 'danger',
+                                content: error.message,
+                                always_show: true
+                            });
                         }
                     }
                 }
@@ -168,7 +173,12 @@ App.login_dialog = () => {
                                 location.reload();
                         } catch (error) {
 
-                            alert(error.message);
+                            App.show_toast({
+                                title: 'Problem in login:',
+                                type: 'danger',
+                                content: error.message,
+                                always_show: true
+                            });
                         }
                     }
                 }
@@ -181,7 +191,7 @@ App.login_dialog = () => {
 App.logout = async () => {
 
     // No matter what, after logout request, even if it fails - need to go back to the home page
-    await App.send_ajax_request('user_auth/logout', 'GET');
+    await App.send_ajax_request('user/logout', 'GET');
 
     location.href = BASE_URL;
 }
