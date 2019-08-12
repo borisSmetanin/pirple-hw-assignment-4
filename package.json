@@ -1,0 +1,27 @@
+{
+  "name": "pirple-hw-assignment-3",
+  "version": "1.0.0",
+  "description": "This is a simple pizza delivery API in which you can make simple HTTP request in order to interact with Node.js based web App i made as part of my online Node.js course.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/borisSmetanin/pirple-hw-assignment-3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/borisSmetanin/pirple-hw-assignment-3/issues"
+  },
+  "homepage": "https://github.com/borisSmetanin/pirple-hw-assignment-3#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "web-push": "^3.3.5"
+  }
+}

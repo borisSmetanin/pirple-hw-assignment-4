@@ -24,23 +24,24 @@
  orders.post_collection = (request, callback) => {
 
     // Support cookies in the request
-    if ( ! request.payload.email &&  request.request_cookies &&  request.request_cookies.email) {
-        request.payload.email = request.request_cookies.email;
+    let {push_subscription, ...payload} = request.payload;
+
+    if ( ! payload.email &&  request.request_cookies &&  request.request_cookies.email) {
+       payload.email = request.request_cookies.email;
     }
 
     if ( ! request.token &&  request.request_cookies &&  request.request_cookies.token) {
         request.token = request.request_cookies.token;
     }
 
-    if (request.payload.email) {
+    if (payload.email) {
+        if (request.payload.credit_card && typeof payload.credit_card === 'string') {
 
+            helpers.verify_token(request.token, payload.email, (err, token_data) => {
         
-        if (request.payload.credit_card && typeof request.payload.credit_card === 'string') {
 
-            helpers.verify_token(request.token, request.payload.email, (err, token_data) => {
-        
                 if ( ! err) {
-                    orders.validate_order(request.payload.order, (err) => {
+                    orders.validate_order(payload.order, (err) => {
     
                         if ( ! err) {
     
@@ -51,7 +52,7 @@
                                 order_data = {
                                     id: order_name,
                                     time: request_time,
-                                    order: request.payload.order,
+                                    order:payload.order,
                                     menu: helpers.extract(menu_items, Object.keys(request.payload.order)),
                                     order_complete: false,
                                     email_sent: false,
@@ -97,6 +98,16 @@
         
                                                         if ( ! err) {
                                                             console.log('payment completed, email sent and order was updated!');
+
+                                                            // Send push notification to the user
+                                                            if (push_subscription) {
+                                                                console.log('Send push notification about it');
+                                                                helpers.send_push_notifications(push_subscription, {
+                                                                    title: 'Pizza Update!',
+                                                                    content: 'Your pizza order is completed!',
+                                                                    icon: 'https://www.dudleysquaregrille.com/files/images/about-us.jpg'
+                                                                });
+                                                            }
                                                         } else {
                                                             console.log('could not update email sent: ', err);  
                                                         }

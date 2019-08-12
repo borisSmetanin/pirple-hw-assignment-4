@@ -16,6 +16,11 @@ This API is using [Stripe](https://stripe.com/) as the payment service and [Mail
 7. in the ```config.js``` file you will need to configure your credentials for ```mailgun``` and ```stripe``` API's. replace whatever is in ```<PASSWORD>``` with your real credentials
 8. In the command line, run the following command from the root directory of this app:
 
+For first installation only
+```bash
+npm install
+```
+Initialize the app:
 ```bash
 node index.js
 ```

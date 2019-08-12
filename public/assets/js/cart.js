@@ -66,10 +66,17 @@ App.complete_payment_dialog = () => {
                         
                    try {
 
-                       const result = await App.send_ajax_request('api/orders', 'POST',   {
-                           order: current_order,
-                           credit_card: serialized_form.credit_card
-                       });
+                        const pizza_order_request = {
+                            order: current_order,
+                            credit_card: serialized_form.credit_card
+                        }
+
+                        if (App.PUSH_SUBSCRIPTION) {
+                            // Add push notification subscription to the request so that user will get push notification when pizza is ready
+                            pizza_order_request.push_subscription = App.PUSH_SUBSCRIPTION;
+                        }
+
+                        const result = await App.send_ajax_request('api/orders', 'POST', pizza_order_request);
 
                        // Set success message 
                        localStorage.setItem('order_complete_message',result.payload.message);

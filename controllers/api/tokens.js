@@ -114,6 +114,17 @@ tokens.create_toke_id = (token_expired, user_id, user_password) => {
   */
  tokens.put = (request, callback) => {
 
+    // Support update from web app
+    if (request.request_cookies) {
+
+        if (request.request_cookies.token) {
+            request.id = request.request_cookies.token;
+        }
+
+        if (request.request_cookies.email) {
+            request.payload.user_email = request.request_cookies.email;
+        }
+    }
     let token_id = request.id;
 
     // M,kae sure email was provided

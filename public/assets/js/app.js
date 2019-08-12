@@ -5,6 +5,9 @@
 
 const App = {};
 
+/**
+ * Opens a dialog
+ */
 App.dialog = (partial_id, dialog_data, dialog_body) => {
 
     let 
@@ -88,7 +91,7 @@ App.send_ajax_request = (end_point, http_type, request_body) => {
     
     if (http_type !== 'GET') {
         request_payload.body = JSON.stringify(
-            typeof request_body === 'object' && Object.entries(request_body).length > 0
+            ['object', 'subscription'].includes( typeof request_body)
                 ? request_body
                 : {}
         );
@@ -196,13 +199,28 @@ App.logout = async () => {
     location.href = BASE_URL;
 }
 
-App.user_logged_in = () => {
+App.user_logged_in = async () => {
     const logout = document.getElementsByClassName('logout');
 
     logout[0].addEventListener('click', (e) => {
         e.preventDefault();
         App.logout();
     });
+
+    // Initialize web worker - for auto sending token update requests
+    if (window.Worker) {
+        // Get the worker
+        const myWorker = new Worker(`${BASE_URL}web_worker.js`);
+        // Message the worker to start the keep user logged auto action
+        myWorker.postMessage({
+            action: 'start_keeping_user_logged'
+        });
+
+        // when ever a worker is messaging the main js scop - this function will run
+        myWorker.onmessage = (e) => {
+            console.log('web worker onmessage:', e);
+        }
+    }
 }
 
 App.user_logged_out = () => {
@@ -239,10 +257,72 @@ App.update_shopping_cart_items_count = () => {
     }
 }
 
+App.PUSH_SUBSCRIPTION = null;
+ // Special function needed for passing the public valid key into the browser's push manager
+// https://github.com/web-push-libs/web-push#using-vapid-key-for-applicationserverkey
+App.urlBase64ToUint8Array = (base64String) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+  
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+  
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+// Register the service worker that will be in charge of any push notifications 
+App.push_notification_register = async () => {
+
+    // Need to make sure user did not denied the app from making pushes
+    if (Notification.permission === 'denied') {
+        console.log('User has denied any push for this app');
+        return false;
+    }
+
+    // In case this is the first use is on the app - need to request permission to have push notifications
+    if (Notification.permission !== 'granted') {
+        console.log('User did not grant any permission yet - request new permission');
+        const permission = await Notification.requestPermission();
+
+        // User did not granted us permission to have push notification
+        if (permission !== 'granted') {
+            console.log('User permission was not granted - no point in continue');
+            return false;
+        }
+        console.log('User has granted a permission');
+    }
+
+    console.log('Register the service worker');
+    // Service worker need to be in the same scop as the web-app root in order for all the pages to be able to use it
+    const register = await navigator.serviceWorker.register(`${BASE_URL}service_worker.js`, {
+        scop: '/'
+    });
+
+    console.log('Get the push subscription');
+
+    // Set the push register to the global scop so we can take it later
+    App.PUSH_SUBSCRIPTION = await register.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: App.urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+    }); 
+    
+    return true;
+}
 // Define all events listener and all functions that are going to be executed on page load 
-App.execute = () => {
+App.execute = async () => {
     
     App.update_shopping_cart_items_count();
+
+    // Initialized the service worker - for web push notifications
+    if ('serviceWorker' in navigator) {
+        App.push_notification_register();
+    }
+
     // Different logic according to different state
     if (USER_IS_LOGGED) {
         App.user_logged_in();
