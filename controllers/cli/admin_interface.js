@@ -4,11 +4,33 @@ module.exports = admin_interface;
 
 // load modules
 const readline = require('readline');
+const helpers  = require('../../lib/helpers');
 
-
+/**
+ * Generates help menu for different commands
+ */
 admin_interface.help = () => {
 
-    console.log('admin_interface.help');
+    // Generate the title
+    helpers.horizontal_cli_space();
+    helpers.create_cli_title('H E L P');
+    helpers.horizontal_cli_space();
+
+    // Loop on the commands in order to create the payload for the CLi table helper
+    let help_columns = [];
+    for (let [command, action] of Object.entries(actions_map)) {
+
+        if (action.id) {
+            command+=' '+ action.id;
+        }
+        help_columns.push([
+            command,
+            action.title
+        ]);
+    }
+
+    // Show the help table
+    helpers.create_cli_table(['Command', 'Explanation'], help_columns);
 }
 
 admin_interface.show_menu = () => {
@@ -53,7 +75,8 @@ const actions_map = {
 
     'show order' : {
         execute: admin_interface.show_order,
-        title: 'Lookup the details of a specific order by order ID' 
+        title: 'Lookup the details of a specific order by order ID',
+        id: '--<order_id>'
     },
 
     'show users' : {
@@ -63,7 +86,8 @@ const actions_map = {
 
     'show user' : {
         execute: admin_interface.show_user,
-        title: 'Lookup the details of a specific user by email address' 
+        title: 'Lookup the details of a specific user by email address',
+        id: '--<user_email>' 
     }
 };
 
