@@ -3,8 +3,9 @@ const admin_interface = {};
 module.exports = admin_interface;
 
 // load modules
-const readline = require('readline');
-const helpers  = require('../../lib/helpers');
+const readline   = require('readline');
+const helpers    = require('../../lib/helpers');
+const menu_items = require('../../assets/menu_items');
 
 /**
  * Generates help menu for different commands
@@ -33,8 +34,28 @@ admin_interface.help = () => {
     helpers.create_cli_table(['Command', 'Explanation'], help_columns);
 }
 
+/**
+ * Show menu items
+ */
 admin_interface.show_menu = () => {
-    console.log('admin_interface.show_menu');
+
+    // Generate the title
+    helpers.horizontal_cli_space();
+    helpers.create_cli_title('M E N U');
+    helpers.horizontal_cli_space();
+
+    // Get the first menu to generate the columns
+    const menu_table_headers = Object.keys(Object.values(menu_items)[0]);
+
+    const menu_table_rows = [];
+
+    // Extract the values for the table format
+    Object.values(menu_items).forEach((menu_item) => {
+        menu_table_rows.push(Object.values(menu_item));
+    });
+
+    // Generate the menu table
+    helpers.create_cli_table(menu_table_headers, menu_table_rows);
 }
 
 admin_interface.show_orders = () => {
