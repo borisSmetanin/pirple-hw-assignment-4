@@ -112,12 +112,20 @@ admin_interface.show_order = (order_id) => {
     create_orders_table([order_id]);
 }
 
-admin_interface.show_users = () => {
-    console.log('admin_interface.show_users');
-}
+/**
+ * Show users by user email
+ */
+admin_interface.show_user = async (user_email) => {
+    helpers.horizontal_cli_space();
+    helpers.create_cli_title(`U S E R  --${user_email}`);
+    helpers.horizontal_cli_space();
 
-admin_interface.show_user = (user_email) => {
-    console.log('admin_interface.show_user');
+    try {
+        const {password, ...user} = await file_model.read_promise('users', helpers.create_user_id(user_email));
+        helpers.create_cli_table(Object.keys(user), [Object.values(user)]);
+    } catch (err) {
+        helpers.create_cli_centered_message('User was not found');
+    }
 }
 
 // Map all actions
@@ -145,12 +153,6 @@ const actions_map = {
         title: 'Lookup the details of a specific order by order ID',
         id: '--<order_id>'
     },
-
-    'show users' : {
-        execute: admin_interface.show_users,
-        title: 'View all the users who have signed up in the last 24 hours' 
-    },
-
     'show user' : {
         execute: admin_interface.show_user,
         title: 'Lookup the details of a specific user by email address',
