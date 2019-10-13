@@ -6,6 +6,7 @@ module.exports = admin_interface;
 const readline   = require('readline');
 const helpers    = require('../../lib/helpers');
 const menu_items = require('../../assets/menu_items');
+const file_model = require('../../lib/file_model');
 
 /**
  * Generates help menu for different commands
@@ -58,12 +59,57 @@ admin_interface.show_menu = () => {
     helpers.create_cli_table(menu_table_headers, menu_table_rows);
 }
 
+/**
+ * Show orders (last 24 Hours)
+ */
 admin_interface.show_orders = () => {
-    console.log('admin_interface.show_orders');
+
+    helpers.horizontal_cli_space();
+    helpers.create_cli_title('O R D E R S  (from the last 24 hours)');
+    helpers.horizontal_cli_space();
+
+    file_model.read_collection('orders', null, (err, order_names) => {
+
+        if (err) {
+            helpers.create_cli_centered_message('We have internal error');
+            return false;
+        }
+
+        if ( ! order_names.length) {
+            helpers.create_cli_centered_message('No Results');
+            return false;
+        }
+        
+        //  Each orders is saved with milliseconds timestamp
+        // 3600000 is one hour in milliseconds
+        // There for 3600000 * 24 === 86400000 which is 24 hours milliseconds timestamp;
+        const twenty_four_hours_ago = Date.now() - 86400000;
+        const recent_order_names = order_names.filter((order) => {
+             const order_timestamp = order.split('_')[1];
+             return order_timestamp >= twenty_four_hours_ago;
+        });
+
+        if ( ! recent_order_names.length) {
+            helpers.create_cli_centered_message('No Results');
+            return false;
+        }
+
+        create_orders_table(recent_order_names);
+    });
 }
 
+/**
+ * Show order by order ID
+ * 
+ * @param order_id {string}
+ */
 admin_interface.show_order = (order_id) => {
-    console.log('admin_interface.show_order');
+    
+    helpers.horizontal_cli_space();
+    helpers.create_cli_title(`O R D E R  --${order_id}`);
+    helpers.horizontal_cli_space();
+
+    create_orders_table([order_id]);
 }
 
 admin_interface.show_users = () => {
@@ -138,8 +184,66 @@ admin_interface.process_action = (input, cli_interface) => {
 
 //=== Helpers ====================================/
 
-admin_interface.create_title = () => {
+/**
+ * Helper function in order to create the orders table
+ * 
+ * @param orders_names array
+ * 
+ */
+const create_orders_table = async (orders_names = []) => {
+    const orders_rows   = [];
+    const orders_header = [ 
+        'ID',
+        'Date',
+        'Order Complete',
+        'Payment Sum',
+        'Order (JSON)',
+        'Payment Complete',
+        'Email Sent',
+        'errors (JSON)'
+    ];
+
+    for (const order_name of orders_names) {
+
+        try {
+
+            const {
+                id, 
+                time,
+                order,
+                order_complete, 
+                email_sent,
+                payment_complete,
+                payment_sum,
+                errors
+            } = await file_model.read_promise('orders', order_name);
+
+            const order_row = {
+                id: id,
+                time: (new Date(time)).toDateString(),
+                order_complete: order_complete,
+                payment_sum: payment_sum,
+                order: JSON.stringify(order),
+                payment_complete: payment_complete,
+                email_sent: email_sent,
+                errors: JSON.stringify(errors)
+            }
     
+            orders_rows.push(
+                Object.values(order_row)
+            );
+
+        } catch(err) {
+            continue;
+        }
+    }
+
+    if ( ! orders_rows.length) {
+        helpers.create_cli_centered_message('No Results');
+        return false;
+    }
+
+    helpers.create_cli_table(orders_header, orders_rows);
 }
 
 /**
