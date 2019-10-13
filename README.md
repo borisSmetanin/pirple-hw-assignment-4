@@ -1,10 +1,12 @@
-# Node.js Pizza API (Pirple Homework assignment 2)
+# Node.js Pizza API (Pirple Homework assignment 4)
 
 This is a simple pizza delivery API in which you can make simple HTTP request in order to interact with Node.js based web App i made as part of my online Node.js course.
 
 You may register as a user to the pizza delivery, login, see the menu, create an order, monitor the order status, logout and even delete yourself from the pizza delivery service.
 
 This API is using [Stripe](https://stripe.com/) as the payment service and [Mailgun](https://www.mailgun.com/) as the email service (you will get an email after you make successful order)
+
+This API comes complete with a responsive website which serves as its client, in additions it has an admin CLI panel.
 
 ## Installation (on Linux based machines)
 1. Install Node.js 
@@ -30,6 +32,19 @@ node index.js
 http is on
 https is on
 ```
+## How to use the UI (website)
+Simply go to `localhost:3000`
+
+## How to use the Admin Panel (CLI)
+
+After the server starts, you can start using the built-in CLI admin panel
+
+Supported options are:
+1. `help` / `man` : will show all CLI commands
+2. `show menu` : show the menu
+3. `show orders`: show last 24 hours orders
+4. `show order --<order_id>`: Show specific order by its ID
+5. `show user --<user_email>`: Show specific user by user's email
 
 ## How to use the API
 
